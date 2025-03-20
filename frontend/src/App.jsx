@@ -1,11 +1,16 @@
 import React from 'react';
-import './index.css'
+import Header from './components/Header'
+import Blog from './components/blog'
+
 
 const App = () => {
   return (
     <div>
-      <h1 className="text-red-500">Welcome to the Blog App</h1>
+      <Header />
+      <Blog />
     </div>
+      
+   
   );
 };
 
