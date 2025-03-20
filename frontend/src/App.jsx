@@ -1,18 +1,30 @@
 import React from 'react';
-import Header from './components/Header'
-import Blog from './components/blog'
-
+import { Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import Blog from './components/Blog';  // Ensure 'Blog' starts with uppercase
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Layout from './Layout';
 
 const App = () => {
   return (
-    <div>
-      <Header />
-      <Blog />
-      <Blog />
-      <Blog />
-    </div>
-      
-   
+    <Routes>
+      <Route element={<Layout />}>
+        <Route 
+          path="/" 
+          element={
+            <>
+              <Blog />
+              <Blog />
+              <Blog />
+            </>
+          } 
+        />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+    </Routes>
   );
 };
 
