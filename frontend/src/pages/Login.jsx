@@ -1,70 +1,97 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { UserContext } from "../UserContext";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { setUserInfo } = useContext(UserContext);
+  const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate function
 
   const validateForm = () => {
     let errors = {};
 
-    if (!email) {
-      errors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Enter a valid email address.';
+    if (!username) {
+      errors.username = "Username is required.";
     }
 
     if (!password) {
-      errors.password = 'Password is required.';
+      errors.password = "Password is required.";
     } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters long.';
+      errors.password = "Password must be at least 6 characters long.";
     }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      console.log('Form submitted successfully:', { email, password });
-      // Proceed with login logic (API call, authentication, etc.)
+  const loginuser = async (ev) => {
+    ev.preventDefault();
+  
+    if (!validateForm()) {
+      return; // Stop if validation fails
+    }
+  
+    try {
+      const response = await fetch("http://localhost:5001/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+  
+      if (response.ok) {
+        const userInfo = await response.json();
+        setUserInfo(userInfo);
+        setRedirect(true); // Set redirect to true on successful login
+        alert("Login successful");
+      } else {
+        const errorMessage = await response.text();
+        console.error("Login failed: ", errorMessage); // Log the error message from the server
+        alert("Wrong credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error); // Log the actual error
+      alert("An error occurred. Please try again.");
     }
   };
+  
+
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        
-        {/* Email Field */}
+      <form onSubmit={loginuser} className="space-y-4">
+        {/* Username Field */}
         <div>
-          <label className="block mb-1">Email:</label>
-          <input 
-            type="email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={`w-full p-2 border rounded ${errors.email ? 'border-red-500' : ''}`}
-            placeholder="Enter your email"
+          <label className="block mb-1">Username:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(ev) => setUsername(ev.target.value)}
+            className={`w-full p-2 border rounded ${errors.username ? "border-red-500" : ""}`}
+            placeholder="Enter your username"
           />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+          {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
         </div>
 
         {/* Password Field */}
         <div>
           <label className="block mb-1">Password:</label>
-          <input 
-            type="password" 
+          <input
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`w-full p-2 border rounded ${errors.password ? 'border-red-500' : ''}`}
+            className={`w-full p-2 border rounded ${errors.password ? "border-red-500" : ""}`}
             placeholder="Enter your password"
           />
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
         </div>
 
         {/* Submit Button */}
-        <button 
+        <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
         >

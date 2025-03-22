@@ -3,9 +3,29 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+
+  async function registerUser() {
+    try {
+      const response = await fetch('http://localhost:5001/register', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200) {
+        alert('User Registered Successfully');
+      } else {
+        alert('Registration failed');
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert('An error occurred. Please try again later.');
+    }
+  }
 
   const validateForm = () => {
     let errors = {};
@@ -14,23 +34,11 @@ const Register = () => {
       errors.username = 'Username is required.';
     }
 
-    if (!email) {
-      errors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Enter a valid email address.';
-    }
-
     if (!password) {
       errors.password = 'Password is required.';
     } else if (password.length < 6) {
       errors.password = 'Password must be at least 6 characters long.';
     }
-
-    // if (!confirmPassword) {
-    //   errors.confirmPassword = 'Confirm password is required.';
-    // } else if (confirmPassword !== password) {
-    //   errors.confirmPassword = 'Passwords do not match.';
-    // }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -39,8 +47,8 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form submitted successfully:', { username, email, password });
-      // Proceed with account creation logic (API call, database storage, etc.)
+      console.log('Form submitted successfully:', { username, password });
+      registerUser(); // Call registerUser to make API request
     }
   };
 
@@ -55,24 +63,11 @@ const Register = () => {
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(ev) => setUsername(ev.target.value)}
             className={`w-full px-3 py-2 border rounded-md ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
             placeholder="Enter your username"
           />
           {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
-        </div>
-
-        {/* Email Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Enter your email"
-          />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
         </div>
 
         {/* Password Field */}
@@ -81,14 +76,12 @@ const Register = () => {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(ev) => setPassword(ev.target.value)}
             className={`w-full px-3 py-2 border rounded-md ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
             placeholder="Enter your password"
           />
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
         </div>
-
-        
 
         {/* Submit Button */}
         <button

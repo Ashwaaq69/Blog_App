@@ -3,12 +3,22 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+
 
 const app = express();
-const secret = "your_secret_key"; // Change this to a strong secret
+const secret = "mysecret"; // Change this to a strong secret
+// Use CORS middleware
+app.use(
+    cors({
+      origin: "http://localhost:5173",  // Allow the frontend URL
+      credentials: true,                // Allow credentials (cookies, HTTP authentication, etc.)
+    })
+  );
 
 // Middleware
 app.use(express.json());
+
 
 // MongoDB Connection
 mongoose.connect('mongodb+srv://ashuu:1234@cluster0.272yc.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0')
@@ -41,7 +51,6 @@ app.post('/login', async (req, res) => {
 
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
-        // Logged in
         jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
             if (err) throw err;
             res.cookie('token', token).json({
@@ -55,7 +64,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

@@ -2,8 +2,6 @@
 import React from 'react'
 import imageone from '../assets/1.jpg'
 
-
-
 const blog = () => {
   return (
     <div className="flex flex-col justify-between max-w-9/10 p-10 m-0 auto gap-8 m">
