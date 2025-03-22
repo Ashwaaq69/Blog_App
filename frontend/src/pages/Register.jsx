@@ -5,7 +5,6 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -27,11 +26,11 @@ const Register = () => {
       errors.password = 'Password must be at least 6 characters long.';
     }
 
-    if (!confirmPassword) {
-      errors.confirmPassword = 'Confirm password is required.';
-    } else if (confirmPassword !== password) {
-      errors.confirmPassword = 'Passwords do not match.';
-    }
+    // if (!confirmPassword) {
+    //   errors.confirmPassword = 'Confirm password is required.';
+    // } else if (confirmPassword !== password) {
+    //   errors.confirmPassword = 'Passwords do not match.';
+    // }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -89,18 +88,7 @@ const Register = () => {
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
         </div>
 
-        {/* Confirm Password Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Confirm your password"
-          />
-          {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
-        </div>
+        
 
         {/* Submit Button */}
         <button
