@@ -4,7 +4,7 @@ const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const secret = "mysecret"; // Change this to a strong secret
@@ -16,6 +16,7 @@ app.use(
     })
   );
 
+  app.use(cookieParser()); 
 // Middleware
 app.use(express.json());
 
@@ -42,6 +43,11 @@ app.post('/register', async (req, res) => {
     }
 });
 
+app.post('/logout', (req,res) => {
+    res.cookie('token', '').json('oki');
+});
+
+
 // Login Route
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -62,6 +68,26 @@ app.post('/login', async (req, res) => {
         res.status(400).json('Wrong credentials');
     }
 });
+
+
+// profile
+
+app.get('/profile', (req,res) =>{
+    const {token} = req.cookies;
+    jwt.verify(token, secret, {}, (err,info)=>{
+        if(err) return res.status(400).json(err);
+        res.json(info);
+    });
+});
+
+app.post('/logout', (req,res) => {
+    res.cookie('token', '').json('ok');
+  });
+  
+
+
+
+ 
 
 // Start Server
 const PORT = process.env.PORT || 5001;
