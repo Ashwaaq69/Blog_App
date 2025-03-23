@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Blog from './components/Blog';  // Ensure 'Blog' starts with uppercase
 import Login from './pages/Login';
 import Register from './pages/Register';
+import CreatePost from "./pages/CreatePost";
 import Layout from './Layout';
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/create" element={<CreatePost />} />
 
     </Routes>
   );
