@@ -81,13 +81,23 @@ app.post('/login', async (req, res) => {
 
 // profile
 
-app.get('/profile', (req,res) =>{
-    const {token} = req.cookies;
-    jwt.verify(token, secret, {}, (err,info)=>{
-        if(err) return res.status(400).json(err);
-        res.json(info);
+app.get('/profile', (req, res) => {
+    const { token } = req.cookies;
+    if (!token) {
+      return res.status(401).json('No token provided');
+    }
+  
+    jwt.verify(token, secret, {}, (err, info) => {
+      if (err) {
+        return res.status(400).json('Invalid token');
+      }
+      res.json(info); // Send the user's profile information
     });
-});
+  });
+  
+
+
+
 
 app.post('/logout', (req,res) => {
     res.cookie('token', '').json('ok');
