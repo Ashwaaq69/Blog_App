@@ -1,23 +1,23 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 // import Header from './components/Header';
-import Blog from './components/Post'; // Ensure Blog starts with uppercase
-import Login from './pages/Login';
-import PostPag from './pages/PostPag';
-// import Posts from './pages/Posts'; 
-import Register from './pages/Register';
-import CreatePost from './pages/CreatePost';
+import IndexPage from "./pages/IndexPage";
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import CreatePost from "./pages/CreatePost";
+import PostPage from "./pages/PostPag";
 import Layout from './Layout';
 
 const App = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
-        {/* <Route path="/" element={<Posts />} />  */}
-        <Route path="/post/:id" element={<PostPag />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/create" element={<CreatePost />} />
+      <Route index element={<IndexPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/create" element={<CreatePost />} />
+          <Route path="/post/:id" element={<PostPage />} />
+        
       </Route>
     </Routes>
   );

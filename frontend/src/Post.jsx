@@ -9,7 +9,7 @@ const Post = ({ _id, title, summary, cover, createdAt, author }) => {
         {/* Image Section */}
         <Link to={`/post/${_id}`} className="w-full md:w-1/3">
           <img 
-            src={`http://localhost:4000/${cover}`} 
+            src={`http://localhost:5001/${cover}`} 
             alt={title} 
             className="w-full h-48 object-cover rounded-lg"
           />

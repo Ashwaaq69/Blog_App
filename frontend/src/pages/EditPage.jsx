@@ -1,16 +1,16 @@
-import React from 'react';
-import {useEffect, useState} from "react";
-import {Navigate, useParams} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
+
 const EditPage = () => {
-    const {id} = useParams();
-  const [title,setTitle] = useState('');
-  const [summary,setSummary] = useState('');
-  const [content,setContent] = useState('');
+  const { id } = useParams();
+  const [title, setTitle] = useState('');
+  const [summary, setSummary] = useState('');
+  const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
-  const [redirect,setRedirect] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5001/post/'+id)
+    fetch('http://localhost:5001/post/' + id)
       .then(response => {
         response.json().then(postInfo => {
           setTitle(postInfo.title);
@@ -18,7 +18,8 @@ const EditPage = () => {
           setSummary(postInfo.summary);
         });
       });
-  }, []);
+  }, [id]);
+
   async function updatePost(ev) {
     ev.preventDefault();
     const data = new FormData();
@@ -40,24 +41,53 @@ const EditPage = () => {
   }
 
   if (redirect) {
-    return <Navigate to={'/post/'+id} />
+    return <Navigate to={'/post/' + id} />;
   }
-    return (
-        <form onSubmit={updatePost}>
-      <input type="title"
-             placeholder={'Title'}
-             value={title}
-             onChange={ev => setTitle(ev.target.value)} />
-      <input type="summary"
-             placeholder={'Summary'}
-             value={summary}
-             onChange={ev => setSummary(ev.target.value)} />
-      <input type="file"
-             onChange={ev => setFiles(ev.target.files)} />
-      <Editor onChange={setContent} value={content} />
-      <button style={{marginTop:'5px'}}>Update post</button>
-    </form>
-    );
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Post</h1>
+      <form onSubmit={updatePost}>
+        {/* Title Input */}
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={ev => setTitle(ev.target.value)}
+          className="w-full p-4 border border-gray-300 rounded-lg mb-4"
+        />
+        
+        {/* Summary Input */}
+        <input
+          type="text"
+          placeholder="Summary"
+          value={summary}
+          onChange={ev => setSummary(ev.target.value)}
+          className="w-full p-4 border border-gray-300 rounded-lg mb-4"
+        />
+
+        {/* File Input */}
+        <input
+          type="file"
+          onChange={ev => setFiles(ev.target.files)}
+          className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+        />
+
+        {/* Editor for Content */}
+        <div className="mb-4">
+          <Editor onChange={setContent} value={content} />
+        </div>
+
+        {/* Update Button */}
+        <button
+          type="submit"
+          className="w-full p-4 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          Update Post
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default EditPage;
