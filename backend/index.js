@@ -146,13 +146,19 @@ app.post('/logout', (req,res) => {
 });
 
 
-app.get('/post', async (req, res) => {
-  const posts = await Post.find()
-      .populate('author', ['username']) // Ensure author username is included
-      .sort({ createdAt: -1 })
-      .limit(20);
-  res.json(posts);
-});
+app.get('/posts', async (req, res) => {
+    try {
+      const posts = await Post.find()
+          .populate('author', ['username'])
+          .sort({ createdAt: -1 })
+          .limit(20);
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+  
 
 app.get('/post/:id', async (req, res) => {
   const { id } = req.params;

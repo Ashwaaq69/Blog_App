@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { format } from "date-fns"; // Use 'format' instead of 'formatISO9075'
 
-const Blog = ({ _id, title, summary, cover, createdAt, author }) => {
+const blog = ({ _id, title, summary, cover, createdAt, author }) => {
   // Format the date if available, else use a fallback message
   const formattedDate = createdAt ? format(new Date(createdAt), "yyyy-MM-dd HH:mm") : "Date not available";
 
@@ -43,4 +43,4 @@ const Blog = ({ _id, title, summary, cover, createdAt, author }) => {
   );
 };
 
-export default Blog;
+export default blog;
