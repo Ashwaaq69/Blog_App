@@ -1,20 +1,16 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { formatISO9075 } from "date-fns";
+import { format } from "date-fns"; // Use 'format' instead of 'formatISO9075'
 
-const blog = ({ _id, title, summary, cover, createdAt, author }) => {
-  let formattedDate = "Date not available";
+const Blog = ({ _id, title, summary, cover, createdAt, author }) => {
+  // Format the date if available, else use a fallback message
+  const formattedDate = createdAt ? format(new Date(createdAt), "yyyy-MM-dd HH:mm") : "Date not available";
 
-  if (createdAt) {
-    try {
-      const dateObject = new Date(createdAt);
-      if (!isNaN(dateObject.getTime())) {
-        formattedDate = formatISO9075(dateObject);
-      }
-    } catch (error) {
-      console.error("Error formatting date:", error);
-    }
-  }
+  // Ensure 'author' has a valid username, otherwise display 'Unknown Author'
+  const authorName = author && author.username ? author.username : "Unknown Author";
+
+  // Handle missing cover image
+  const coverImage = cover ? `http://localhost:5001/${cover}` : "path/to/default-image.jpg"; // Replace with your default image path
 
   return (
     <div className="max-w-screen-lg mx-auto p-6 bg-white shadow-md rounded-lg mb-8">
@@ -22,7 +18,7 @@ const blog = ({ _id, title, summary, cover, createdAt, author }) => {
         {/* Image Section */}
         <Link to={`/post/${_id}`} className="w-full md:w-1/3">
           <img 
-            src={`http://localhost:5001/${cover}`} 
+            src={coverImage} 
             alt={title} 
             className="w-full h-48 object-cover rounded-lg"
           />
@@ -37,7 +33,7 @@ const blog = ({ _id, title, summary, cover, createdAt, author }) => {
               </h2>
             </Link>
             <p className="text-gray-500 text-sm mt-1">
-              by <span className="font-semibold">{author?.username || "Unknown Author"}</span> • {formattedDate}
+              by <span className="font-semibold">{authorName}</span> • {formattedDate}
             </p>
           </div>
           <p className="text-gray-700 mt-2">{summary}</p>
@@ -47,4 +43,4 @@ const blog = ({ _id, title, summary, cover, createdAt, author }) => {
   );
 };
 
-export default blog;
+export default Blog;
