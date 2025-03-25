@@ -29,7 +29,7 @@ const EditPage = () => {
     if (files?.[0]) {
       data.set('file', files?.[0]);
     }
-    const response = await fetch('http://localhost:4000/post', {
+    const response = await fetch('http://localhost:5001/post', {
       method: 'PUT',
       body: data,
       credentials: 'include',
@@ -43,9 +43,20 @@ const EditPage = () => {
     return <Navigate to={'/post/'+id} />
   }
     return (
-        <div>
-            <h1>Edit Page</h1>
-        </div>
+        <form onSubmit={updatePost}>
+      <input type="title"
+             placeholder={'Title'}
+             value={title}
+             onChange={ev => setTitle(ev.target.value)} />
+      <input type="summary"
+             placeholder={'Summary'}
+             value={summary}
+             onChange={ev => setSummary(ev.target.value)} />
+      <input type="file"
+             onChange={ev => setFiles(ev.target.files)} />
+      <Editor onChange={setContent} value={content} />
+      <button style={{marginTop:'5px'}}>Update post</button>
+    </form>
     );
 };
 
