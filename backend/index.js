@@ -25,9 +25,10 @@ app.use(
 
   
 
-  app.use(cookieParser()); 
+app.use(cookieParser()); 
 // Middleware
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 
 // MongoDB Connection
@@ -146,37 +147,27 @@ app.post('/logout', (req,res) => {
 });
 
 
-app.get('/post', async (req, res) => {
-  try {
-      const posts = await Post.find();
-      res.json(posts);
-  } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch posts' });
-  }
-});
 
-// app.get('/posts', async (req, res) => {
-//     try {
-//       const posts = await Post.find()
-//           .populate('author', ['username'])
-//           .sort({ createdAt: -1 })
-//           .limit(20);
-//       res.json(posts);
-//     } catch (error) {
-//       console.error("Error fetching posts:", error);
-//       res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   });
-  
+
+app.get('/post', async (req,res) => {
+    res.json(
+      await Post.find()
+        .populate('author', ['username'])
+        .sort({createdAt: -1})
+        .limit(20)
+    );
+  });
+
+
 
 app.get('/post/:id', async (req, res) => {
-  const { id } = req.params;
-  const postDoc = await Post.findById(id)
-      .populate('author', ['username']); // Ensure author username is included
-  res.json(postDoc);
-});
+    const {id} = req.params;
+    const postDoc = await Post.findById(id).populate('author', ['username']);
+    res.json(postDoc);
+  })
 
- 
+
+
 
 // Start Server
 const PORT = process.env.PORT || 5001;
