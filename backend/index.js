@@ -23,7 +23,7 @@ app.use(
     })
   );
 
-  
+// app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use(cookieParser()); 
 // Middleware
@@ -165,6 +165,50 @@ app.get('/post/:id', async (req, res) => {
     const postDoc = await Post.findById(id).populate('author', ['username']);
     res.json(postDoc);
   })
+
+  app.put('/post/:id', uploadMiddleware.single('file'), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, summary, content } = req.body;
+
+        // Handle file upload (if provided)
+        let newPath = null;
+        if (req.file) {
+            const { originalname, path } = req.file;
+            const ext = originalname.split('.').pop();
+            newPath = `${path}.${ext}`;
+            fs.renameSync(path, newPath);
+        }
+
+        // Check authentication token
+        const { token } = req.cookies;
+        if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+        jwt.verify(token, secret, {}, async (err, info) => {
+            if (err) return res.status(403).json({ error: "Invalid token" });
+
+            const postDoc = await Post.findById(id);
+            if (!postDoc) return res.status(404).json({ error: "Post not found" });
+
+            // Ensure only the author can edit the post
+            if (postDoc.author.toString() !== info.id) {
+                return res.status(403).json({ error: "Unauthorized" });
+            }
+
+            // Update post
+            postDoc.title = title;
+            postDoc.summary = summary;
+            postDoc.content = content;
+            if (newPath) postDoc.cover = newPath;
+            await postDoc.save();
+
+            res.json(postDoc);
+        });
+    } catch (error) {
+        console.error("Error updating post:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 
 

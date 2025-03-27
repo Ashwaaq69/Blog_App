@@ -1,30 +1,26 @@
-import React from 'react';
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-const Editor = () => {
-    const modules = {
-        toolbar: [
-          [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-          [
-            { list: 'ordered' },
-            { list: 'bullet' },
-            { indent: '-1' },
-            { indent: '+1' },
-          ],
-          ['link', 'image'],
-          ['clean'],
-        ],
-      };
-      return (
-        <div className="content">
-        <ReactQuill
-          value={value}
-          theme={'snow'}
-          onChange={onChange}
-          modules={modules} />
-        </div>
-    );
+const Editor = ({ value, onChange }) => {
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
+
+  return (
+    <ReactQuill
+      value={value}
+      onChange={onChange} // ✅ Ensure this is passed correctly
+      modules={modules}
+      theme="snow"
+    />
+  );
 };
 
 export default Editor;
