@@ -10,7 +10,7 @@ const Layout = () => {
         <Outlet /> {/* ✅ This allows child components to render */}
       </main>
       <footer className="bg-gray-100 p-4 text-center">
-        © 2024 My Blog App
+        © 2025 My Blog App
       </footer>
     </div>
   );
